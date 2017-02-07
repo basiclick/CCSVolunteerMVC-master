@@ -1,0 +1,76 @@
+﻿@using CCSVolunteerMVC.Models
+@using CCSVolunteerMVC.DAL;
+@{
+	ViewBag.Title = "KioskExit";
+	if (App.Admin != 3)
+	{
+		Response.Redirect("~/UserLogIn/Index");
+	}
+	///This screen is a login screen asking for the Admin's username and password.
+	///This will have the users that are still in the static class clock out with a given one hour of service
+	if (IsPost)
+	{
+		var username = Request["username"];
+		var password = Request["password"];
+		if (username == "CCSAdmin" && password == "CCSAdmin")
+		{
+			App.Admin = 1;
+			DatabaseHelper dbHelper = new DatabaseHelper();
+			dbHelper.ClockOutExcessUsers();
+			Response.Redirect("~/MessageScreens/EndTerminal");
+			App.Refresh = 0;
+		}
+	}
+	if (App.Refresh == 0)
+	{
+		App.Refresh = 1;
+	}
+	else if(App.Refresh == 1 && App.Admin == 3)
+	{
+		Response.Redirect("~/Kiosk/Index");
+	}
+}
+<head>
+	<meta http-equiv="refresh" content="60">
+</head>
+<div class="container-fluid">
+	<div class="container">
+		<h1 class="jumbotron text-center" style="background-color:#c41609">Sign out of machine</h1>
+		<br><br>
+		<div class="container">
+			<!--Previous action sent to action="http://icarus.cs.weber.edu/~rl11386/CCS/user/userLogIn.php"-->
+			<form action="" method="post" class="form-horizontal" id="login">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Username:</label>
+					<div class="col-sm-5">
+						<input name="username" type="text" required="required" id="username" maxlength="50" class="form-control">
+					</div>
+					<br><br>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Password:</label>
+					<div class="col-sm-5">
+						<input name="password" type="password" required="required" class="form-control" id="password" maxlength="30">
+					</div>
+				</div>
+				<div class="col-sm-offset-2 col-sm-5 form-group">
+					<input class="btn btn-primary" name="submit" type="submit" id="submit" formmethod="POST" value="Submit">
+					&nbsp;&nbsp;&nbsp;
+					<input class="btn btn-danger" name="reset" type="reset" id="reset" value="Reset">
+				</div>
+			</form>
+			
+			<span class="col-md-8 col-sm-8"></span>
+			<div class="form-group">
+				<form action="@Url.Action("Index", "Kiosk")" method="post" class="form-horizontal col-md-12 container-fluid" id="login">
+					<div class="col-sm-12">
+						<input class="btn btn-secondary btn-lg btn-block col-md-offset-3" style="background-color: #041596; color: #ffffff" name="Return To Index" type="submit" id="Return To Index" formmethod="POST" title="Out" value="Return To Index">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<br><br>
+<script src="~/Scripts/main.js"></script>
+<script src="~/Scripts/dateValidation.js"></script>

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<CCSVolunteerMVC.Models.VolunteerGroup>
+@{
+	ViewBag.Title = "GroupClock";
+	///This screen will allow group volunteers to choose which volunteer they are
+	///This is a tabbed index this goes alphabetical by first character
+	///Some code was left in if for further use
+	if (App.Admin != 3)
+	{
+		Response.Redirect("~/UserLogIn/Index");
+	}
+	
+}
+
+<h4 class="jumbotron text-center">Select your group</h4>
+
+<ul class="nav nav-tabs">
+	<li><a name="A" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "A"})">A</a></li>
+	<li><a name="B" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "B"})">B</a></li>
+	<li><a name="C" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "C"})">C</a></li>
+	<li><a name="D" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "D"})">D</a></li>
+	<li><a name="E" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "E"})">E</a></li>
+	<li><a name="F" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "F"})">F</a></li>
+	<li><a name="G" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "G"})">G</a></li>
+	<li><a name="H" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "H"})">H</a></li>
+	<li><a name="I" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "I"})">I</a></li>
+	<li><a name="J" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "J"})">J</a></li>
+	<li><a name="K" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "K"})">K</a></li>
+	<li><a name="L" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "L"})">L</a></li>
+	<li><a name="M" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "M"})">M</a></li>
+	<li><a name="N" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "N"})">N</a></li>
+	<li><a name="O" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "O"})">O</a></li>
+	<li><a name="P" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "P"})">P</a></li>
+	<li><a name="Q" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "Q"})">Q</a></li>
+	<li><a name="R" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "R"})">R</a></li>
+	<li><a name="S" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "S"})">S</a></li>
+	<li><a name="T" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "T"})">T</a></li>
+	<li><a name="U" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "U"})">U</a></li>
+	<li><a name="V" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "V"})">V</a></li>
+	<li><a name="W" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "W"})">W</a></li>
+	<li><a name="X" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "X"})">X</a></li>
+	<li><a name="Y" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "Y"})">Y</a></li>
+	<li><a name="Z" href="@Url.Action("GroupClock", "Kiosk", new { alphabetChar = "Z"})">Z</a></li>
+</ul>
+
+<table class="table">
+	<tr>
+		<th style="font-size: 36px;">
+			@Html.DisplayNameFor(model => model.volGrpName)
+		</th>
+		<th></th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td style="font-size: 36px;">
+				@Html.DisplayFor(modelItem => item.volGrpName)
+			</td>
+			<td>
+				<button class="btn btn-block btn-primary btn-lg" onclick="location.href='@Url.Action("GroupLogin", "Kiosk", new { id = item.volunteerGroupID})'">Select</button>
+			</td>
+		</tr>
+	}
+</table>

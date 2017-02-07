@@ -1,0 +1,42 @@
+﻿@model IEnumerable<string>
+@{
+	ViewBag.Title = "Kiosk Volunteer or Group";
+	App.Refresh = 0;
+	///This screen is for the choice if the volunteer is a group or individual
+	///This screen also sets the global variable for the clock in/out
+	var volunteer = Request["Volunteer"];
+	var Group = Request["Group"];
+	var clockIn = Request["In"];
+	var clockOut = Request["Out"];
+	string action;
+	if (Model.Count() < 1)
+	{
+		if (!string.IsNullOrWhiteSpace(clockIn))
+		{
+			action = clockIn;
+			App.TimeInTimeOut = action;
+		}
+		else
+		{
+			action = clockOut;
+			App.TimeInTimeOut = action;
+		}
+	}
+	else
+	{
+		action = Model.ElementAt(0);
+	}
+	if (App.Admin != 3)
+	{
+		Response.Redirect("~/UserLogIn/Index");
+	}
+
+}
+
+<h2 class="jumbotron text-center">Kiosk Volunteer or Group</h2>
+<form action="@Url.Action("VolunteerClock", "Kiosk", new { clock = action.ToString() })" method="post" class="form-horizontal" id="login">
+	<div class="col-sm-offset-2 col-sm-5" style="margin-left: 150px">
+		<input class="btn btn-primary btn-lg btn-block jumbotron col-sm-offset-3" style="background-color: #04963e; color: #ffffff" name="Volunteer" type="submit" id="Volunteer" formmethod="POST" title="Volunteer" value="Volunteer">
+		<input class="btn btn-secondary btn-lg btn-block jumbotron col-sm-offset-3" style="background-color: #041596; color: #ffffff" name="Group" type="submit" id="Group" formmethod="POST" title="Group" value="Group">
+	</div>
+</form>

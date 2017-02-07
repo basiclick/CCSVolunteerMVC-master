@@ -1,0 +1,35 @@
+﻿@using CCSVolunteerMVC.Models
+@model CCSVolunteerMVC.Models.MessageScreenModel
+@{
+	ViewBag.Title = "CompleteSignIn";
+	var tempString = "";
+	///This is a simple page showing a successful log in
+	if (App.Refresh == 0)
+	{
+		App.Refresh = 1;
+	}
+	else {
+		Response.Redirect("~/Kiosk/Index");
+	}
+	TimeRoundUp timeRoundUp = new TimeRoundUp();
+}
+<head>
+	<meta http-equiv="refresh" content="3" >
+</head>
+<h2 class="jumbotron text-center">Completed Sign In</h2>
+
+<div class="text-center" style="font-size: 36px;">
+	Thank you for your help
+	@if (App.VolunteerType == "Group")
+	{
+		tempString = Model.VolunteerGroup.volGrpName;
+	}
+	else {
+		tempString = Model.Volunteer.volFirstName;
+	}
+	@tempString
+</div><br />
+<div class="text-center" style="font-size: 36px;">
+	You clocked in at @DateTime.Now.ToString("hh:mm tt")
+</div>
+

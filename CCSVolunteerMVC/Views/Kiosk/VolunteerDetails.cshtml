@@ -1,0 +1,103 @@
+﻿@using CCSVolunteerMVC.Models;
+@using CCSVolunteerMVC.DAL;
+@model CCSVolunteerMVC.ViewModels.VolunteerPositionViewModel
+
+@{
+	ViewBag.Title = "Details";
+	DatabaseHelper dbHelper = new DatabaseHelper();
+	///This is the View that displays the volunteers information that will allow them to clock in/out and submit which
+	///position they held for the volunteer work
+	List<SelectListItem> selectListItem = new List<SelectListItem>();
+	var appLocation = App.Location;
+	foreach (var item in Model.Positions)
+	{
+		selectListItem.Add(new SelectListItem()
+		{
+			Text = item.PositionTitle,
+			Value = item.PositionID.ToString()
+		});
+	}
+	var position = Request["Positions"];
+	int locationId = 0;
+
+	if (IsPost)
+	{
+		int positionId = 0;
+		if (App.TimeInTimeOut == "In" && int.TryParse(position, out positionId) && int.TryParse(appLocation, out locationId))
+		{
+			User tempUser = new User(Model.Volunteer.Volunteer.ElementAt(0).volunteerID, 1, positionId, 3, "", locationId);
+			dbHelper.WriteUser(tempUser);
+			if (Model.Volunteer.Volunteer.ElementAt(0).volsCourtOrdered == 1)
+			{
+				Response.Redirect(string.Format("~/MessageScreens/CourtOrderedScreen/{0}", Model.Volunteer.Volunteer.ElementAt(0).volunteerID));
+			}
+			else
+			{
+				Response.Redirect(string.Format("~/MessageScreens/CompleteSignIn/{0}", Model.Volunteer.Volunteer.ElementAt(0).volunteerID));
+			}
+		}
+		else
+		{
+			
+			User tempUser = new User(Model.Volunteer.Volunteer.ElementAt(0).volunteerID, 1, positionId, 3, "", locationId);
+			if (tempUser != null)
+			{
+				
+				dbHelper.FindRecentVolunteerUser(tempUser);
+				Response.Redirect(string.Format("~/MessageScreens/CompleteSignOut/{0}", Model.Volunteer.Volunteer.ElementAt(0).volunteerID));
+			}
+			else
+			{
+				Response.Redirect("~/MessageScreens/NoRecords");
+			}
+		}
+	}
+	if (App.Admin != 3)
+	{
+		Response.Redirect("~/UserLogIn/Index");
+	}
+}
+
+<h2 class="jumbotron text-center">Volunteer</h2>
+
+<div>
+	<hr />
+	<dl class="dl-horizontal">
+		<dt style="font-size: 24px;">
+			@Html.DisplayNameFor(model => model.Volunteer.Volunteer.ElementAt(0).volFirstName)
+		</dt>
+
+		<dd style="font-size: 24px;">
+			@Html.DisplayFor(model => model.Volunteer.Volunteer.ElementAt(0).volFirstName)
+		</dd>
+
+		<dt style="font-size: 24px;">
+			@Html.DisplayNameFor(model => model.Volunteer.Volunteer.ElementAt(0).volLastName)
+		</dt>
+
+		<dd style="font-size: 24px;">
+			@Html.DisplayFor(model => model.Volunteer.Volunteer.ElementAt(0).volLastName)
+		</dd>
+	</dl>
+	<div class="container col-sm-offset-2">
+		<form action="" method="post">
+			<div class="col-md-10 container">
+				@if (App.TimeInTimeOut == "In")
+				{
+					<div class="form-group" style="font-size: 36px;">
+						@Html.LabelFor(model => model.Positions, htmlAttributes: new { @class = "control-label col-sm-10" })
+						<div class="col-md-10">
+							<div class="row">
+								@Html.DropDownListFor(model => model.Positions, selectListItem, htmlAttributes: new { @class = "btn btn-default dropdown-toggle jumbotron" })
+								@Html.ValidationMessageFor(model => model.Positions, "", new { @class = "text-danger" })
+							</div>
+						</div>
+					</div>
+				}
+				<div>
+					<input class="btn btn-primary btn-block jumbotron" style="background-color: #4286f4; color: #000000;" name="SignIn" type="submit" id="SignIn" formmethod="POST" title="Submit" value="Submit">
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

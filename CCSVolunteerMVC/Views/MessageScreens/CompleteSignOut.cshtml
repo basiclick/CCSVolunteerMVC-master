@@ -1,0 +1,35 @@
+﻿@using CCSVolunteerMVC.Models
+@{
+	ViewBag.Title = "CompleteSignOut";
+	///This page shows that the user successfully signed out
+	TimeRoundUp timeRoundUp = new TimeRoundUp();
+	var tempString = "";
+	if (App.Refresh == 0)
+	{
+		App.Refresh = 1;
+	}
+	else
+	{
+		Response.Redirect("~/Kiosk/Index");
+	}
+}
+<head>
+	<meta http-equiv="refresh" content="3">
+</head>
+<h2 class="jumbotron text-center">Completed Sign Out</h2>
+
+<div class="text-center" style="font-size: 36px;">
+	Thank you for your help
+	@if (App.VolunteerType == "Group")
+	{
+		tempString = Model.VolunteerGroup.volGrpName;
+	}
+	else
+	{
+		tempString = Model.Volunteer.volFirstName;
+	}
+	@tempString
+</div><br />
+<div class="text-center" style="font-size: 36px;">
+	You clocked out at @DateTime.Now.ToString("hh:mm tt")
+</div>

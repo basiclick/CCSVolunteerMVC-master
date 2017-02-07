@@ -1,0 +1,18 @@
+﻿
+@{
+	ViewBag.Title = "No Records";
+	///This is the screen that is displayed when the volunteer is not
+	///shown in the CurrentUser collection in the app
+	if (App.Refresh == 0)
+	{
+		App.Refresh = 1;
+	}
+	else
+	{
+		Response.Redirect("~/Kiosk/Index");
+	}
+}
+<head>
+	<meta http-equiv="refresh" content="3">
+</head>
+<h2 class="jumbotron text-center">No Records of user signed in</h2>

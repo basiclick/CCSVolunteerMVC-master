@@ -1,0 +1,50 @@
+﻿@using CCSVolunteerMVC.Models;
+@using CCSVolunteerMVC.ViewModels;
+@model VolunteerClockModel
+@{
+	ViewBag.Title = "Volunteer Clock";
+	///This view asks the volunteer to enter their PIN in MMDDYY style. There is logic in the getter
+	///in the volunteer class that creates this pin. 
+	var group = Request["Group"];
+	if (!string.IsNullOrWhiteSpace(group))
+	{
+		App.VolunteerType = "Group";
+		Response.Redirect("~/Kiosk/GroupClock");
+	}
+	else {
+		App.VolunteerType = "Volunteer";
+	}
+	IEnumerable<string> volunteerPinCollection = new List<string>();
+
+	if (IsPost)
+	{
+		volunteerPinCollection = Model.Volunteers.Select(i => i.volPin).ToList();
+		var password = Request["Password"];
+	}
+	if (App.Admin != 3)
+	{
+		Response.Redirect("~/UserLogIn/Index");
+	}
+}
+
+<h4 class="jumbotron text-center">Please Enter Your Pin.<br /> MMDDYY(example April 12, 1986 = 041286)</h4>
+<div class="container form-horizontal">
+	<form action="@Url.Action("VolunteerPasswordList", "Kiosk")" method="post" class="form-horizontal" id="login">
+		<div class="form-group">
+			<div class="row" style="margin-left:150px">
+				<label class="col-sm-offset-1" style="margin-left: 50px; font-size: 36px;" for="Password">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;Six digit pin
+				</label>
+				<input class="form-control col-md-10 jumbotron" type="tel" maxlength="6" pattern="[0-9]*" inputmode="numeric" name="Password" id="Password" placeholder="MMDDYY">
+			</div>
+			<div class="row" style="margin-left: 150px">
+				<span class="col-md-6"></span>
+				<input class="btn btn-primary btn-block jumbotron" style="background-color: #4286f4; color: #000000;" name="PasswordBtn" type="submit" id="VolunteerPin" formmethod="POST" title="Password" value="Clock In/Out">
+			</div>
+		</div>
+	</form>
+</div>
+<script>
+	document.getElementById('Password').focus();
+</script>
